@@ -1,12 +1,6 @@
 import os
 
-list = [[8, 8, 8, 8, 8, 8], 
-        [8, 2, 2, 2, 2, 8],
-        [8, 2, 2, 2, 2, 8],
-        [8, 2, 2, 2, 2, 8],
-        [8, 2, 2, 2, 2, 8],
-        [8, 8, 8, 8, 8, 8]] 
- 
+
 def move():
     mv = input("What side of light do you want to go? (north, east, south, west)")
     if mv == "north":
@@ -26,14 +20,20 @@ def wallbang(xb,yb,xc,yc):
     else:
         return(True)
 
+
 def render(xchar, ychar):
-    for y in range(0,6):
-        for x in range(0,6):
+    os.system('cls' if os.name == 'nt' else 'clear')
+    for y in range(1,8):
+        for x in range(1,16):
             if y == ychar and x == xchar:
                 print("웃", end="")
-            else: 
-                print(list[x][y], end="")
-        print('')
+            elif y == 1 or y == 7:
+                print("$", end ="")
+            elif x == 1 or x == 15:
+                print("$", end ="")
+            else: print(" ", end="")
+        print('') 
+    
     
 i,x,y = 0,0,0
 wall,char ="$","웃"   

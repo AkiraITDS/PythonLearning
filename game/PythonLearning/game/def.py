@@ -18,7 +18,6 @@ def wallbang(xb,yb,xc,yc):
         return(True)
 
 def render(xchar, ychar):
-    os.system('cls' if os.name == 'nt' else 'clear')
     for y in range(1,8):
         for x in range(1,16):
             if y == ychar and x == xchar:
