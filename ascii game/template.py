@@ -15,8 +15,8 @@ list = [[8, 8, 8, 8, 8, 8],
         [8, 2, 2, 2, 2, 8],
         [8, 8, 8, 8, 8, 8]] 
 
-WIDTH = 360
-HEIGHT = 480
+WIDTH = 1080
+HEIGHT = 1920
 FPS = 30
 
 
@@ -44,7 +44,7 @@ class Tile(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((50,50))
-        self.image.fill(GREEN)
+        self.image = pygame.image.load("image/wall.png").convert()
         self.rect = self.image.get_rect()
         self.rect.center = (x*50+25, y*50+25)
 
