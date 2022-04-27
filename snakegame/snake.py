@@ -6,14 +6,15 @@ import os
 
 i,x,y = 0,0,0
 wall,char ="$","웃"   
-xchar,ychar = 1,1
+xchar,ychar = 5,5
 xborder, yborder = 10,10
 border = xborder
 chartile = 0
 maparray1 = []
-speed = 0.001 
+speed = 0.002 
 tilewidth = 50
-
+movetime = 1/speed
+print(movetime)
 for i in range(0,border+1):
     maparray2 = []
     for j in range(0,border+1):
@@ -24,14 +25,7 @@ for i in range(0,border+1):
         else:
             maparray2.append(2)
     maparray1.append(maparray2)
-        
-list = [[8, 8, 8, 8, 8, 8], 
-        [8, 2, 2, 2, 2, 8],
-        [8, 2, 2, 2, 2, 8],
-        [8, 2, 2, 2, 2, 8],
-        [8, 2, 2, 2, 2, 8],
-        [8, 8, 8, 8, 8, 8]] 
-
+print(maparray1)
 WIDTH = 1080
 HEIGHT = 1920
 FPS = 30
@@ -61,32 +55,74 @@ class Char(pygame.sprite.Sprite,):
         self.rect.center = (x*50+25, y*50+25)
         self.xend = xchar
         self.yend = ychar
+        self.ismoving = False
+        self.timestart = 0
     def update(self,dtime):
-        if xchar != self.xend:
+        global xchar, ychar
+        global movetime
+        self.timestart += dtime
+        if xchar-self.xend < 0:
+            self.rect.center = (self.rect.center[0]+tilewidth*speed*dtime, self.rect.center[1])
+            if self.timestart > movetime:
+                xchar = self.xend
+                self.ismoving = False
+        elif xchar-self.xend > 0:
             self.rect.center = (self.rect.center[0]-tilewidth*speed*dtime, self.rect.center[1])
+            if self.timestart > movetime:
+                xchar = self.xend
+                self.ismoving = False 
+        elif ychar-self.yend > 0:
+            self.rect.center = (self.rect.center[0], self.rect.center[1]-tilewidth*speed*dtime)
+            if self.timestart > movetime:
+                ychar = self.yend
+                self.ismoving = False
+        elif ychar-self.yend < 0:
+            self.rect.center = (self.rect.center[0], self.rect.center[1]+tilewidth*speed*dtime)
+            if self.timestart > movetime:
+                ychar = self.yend
+                self.ismoving = False
     def moveleft(self,x):
         global xchar, ychar
-        if maparray1[xchar-1][ychar] != 8:    
-            xend = xchar-1
-            self.rect.center = (xchar*50+25, ychar*50+25)
+        print(xchar)
+        if self.ismoving:
+            return
+        if maparray1[xchar-1][ychar] != 8: 
+            self.ismoving = True 
+            self.timestart = 0  
+            self.xend = xchar-1
         
     def moveright(self,x):
         global xchar,ychar
+        if self.ismoving:
+            return
         if maparray1[xchar+1][ychar] != 8:
-            xchar +=1
-            self.rect.center = (xchar*50+25, ychar*50+25)
-
+            self.ismoving = True 
+            self.timestart = 0
+            self.xend = xchar+1
+           
+    
+           
     def moveup(self,y):
         global xchar, ychar
-        if maparray1[xchar][ychar-1] != 8:   
-            ychar -=1
-            self.rect.center = (xchar*50+25, ychar*50+25)
+        print(ychar)
+        if self.ismoving:
+            return
+        if maparray1[xchar][ychar-1] != 8: 
+            self.ismoving = True 
+            self.timestart = 0   
+            self.yend = ychar-1
+
               
     def movedown(self,x):
         global xchar,ychar
+        print(ychar)
+        if self.ismoving:
+            return
         if maparray1[xchar][ychar+1] != 8:
-            ychar +=1
-            self.rect.center = (xchar*50+25, ychar*50+25)
+            self.ismoving = True 
+            self.timestart = 0 
+            self.yend = ychar+1
+  
     
             
 
