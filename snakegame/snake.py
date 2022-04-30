@@ -1,12 +1,11 @@
 # Pygame шаблон - скелет для нового проекта Pygame
 import pygame
-import random
+import random as r
 import os
 
 
-i,x,y = 0,0,0
-wall,char ="$","웃"   
-xchar,ychar = 5,5
+
+xchar,ychar = 3,3
 xborder, yborder = 10,10
 border = xborder
 chartile = 0
@@ -15,17 +14,23 @@ speed = 0.002
 tilewidth = 50
 movetime = 1/speed
 print(movetime)
-for i in range(0,border+1):
+for i in range(0,border):
     maparray2 = []
-    for j in range(0,border+1):
-        if i == 0 or i == border:
+    for j in range(0,border):
+        if i == 0 or i == border-1:
             maparray2.append(8)
-        elif j == 0 or j == border:
+        elif j == 0 or j == border-1:
             maparray2.append(8)
         else:
             maparray2.append(2)
     maparray1.append(maparray2)
-print(maparray1)
+rx = r.randint(1,8)
+ry = r.randint(1,8)
+
+while rx == xchar or ry == ychar:
+    rx = r.randint(1,8)
+    ry = r.randint(1,8)
+maparray1[rx][ry] = 8
 WIDTH = 1080
 HEIGHT = 1920
 FPS = 30
@@ -62,30 +67,30 @@ class Char(pygame.sprite.Sprite,):
         global movetime
         self.timestart += dtime
         if xchar-self.xend < 0:
-            self.rect.center = (self.rect.center[0]+tilewidth*speed*dtime, self.rect.center[1])
+            self.rect.center = ((xchar*50+25)+tilewidth*speed*self.timestart, self.rect.center[1])
             if self.timestart > movetime:
-                xchar = self.xend
+                xchar = self.xend              
                 self.ismoving = False
         elif xchar-self.xend > 0:
-            self.rect.center = (self.rect.center[0]-tilewidth*speed*dtime, self.rect.center[1])
+            self.rect.center = ((xchar*50+25)-tilewidth*speed*self.timestart, self.rect.center[1])
             if self.timestart > movetime:
-                xchar = self.xend
+                xchar = self.xend      
                 self.ismoving = False 
         elif ychar-self.yend > 0:
-            self.rect.center = (self.rect.center[0], self.rect.center[1]-tilewidth*speed*dtime)
+            self.rect.center = (self.rect.center[0], (ychar*50+25)-tilewidth*speed*self.timestart)
             if self.timestart > movetime:
-                ychar = self.yend
+                ychar = self.yend              
                 self.ismoving = False
         elif ychar-self.yend < 0:
-            self.rect.center = (self.rect.center[0], self.rect.center[1]+tilewidth*speed*dtime)
+            self.rect.center = (self.rect.center[0], (ychar*50+25)+tilewidth*speed*self.timestart)
             if self.timestart > movetime:
                 ychar = self.yend
                 self.ismoving = False
     def moveleft(self,x):
         global xchar, ychar
-        print(xchar)
         if self.ismoving:
             return
+        print(xchar-1)
         if maparray1[xchar-1][ychar] != 8: 
             self.ismoving = True 
             self.timestart = 0  
@@ -95,6 +100,7 @@ class Char(pygame.sprite.Sprite,):
         global xchar,ychar
         if self.ismoving:
             return
+        print(xchar+1)
         if maparray1[xchar+1][ychar] != 8:
             self.ismoving = True 
             self.timestart = 0
@@ -104,9 +110,9 @@ class Char(pygame.sprite.Sprite,):
            
     def moveup(self,y):
         global xchar, ychar
-        print(ychar)
         if self.ismoving:
             return
+        print(ychar-1)
         if maparray1[xchar][ychar-1] != 8: 
             self.ismoving = True 
             self.timestart = 0   
@@ -115,9 +121,9 @@ class Char(pygame.sprite.Sprite,):
               
     def movedown(self,x):
         global xchar,ychar
-        print(ychar)
         if self.ismoving:
             return
+        print(ychar+1)
         if maparray1[xchar][ychar+1] != 8:
             self.ismoving = True 
             self.timestart = 0 
@@ -134,8 +140,8 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("My Game")
 clock = pygame.time.Clock()
 all_sprites = pygame.sprite.Group()
-for y in range(0,border+1):
-    for x in range(0,border+1):
+for y in range(0,border):
+    for x in range(0,border):
         if x == xchar and y == ychar:
             chartile = Char(x,y)
             all_sprites.add(chartile)
